@@ -22,7 +22,7 @@ Fork this repository.
 
 * Script your service using CloudFormation, and your server configuration management tool of choice should you need one.
 * Provision the service in your AWS account.
-* Write a Python healthcheck script that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
+* Write a healthcheck script in Python that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
 * Alter the README to contain instructions required to:
   * Provision the service.
   * Run the healthcheck script.
