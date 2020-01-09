@@ -20,9 +20,9 @@ You are required to provision and deploy a new service in AWS. It must:
 
 Fork this repository.
 
-* Script your service using your configuration management and/or infrastructure-as-code tool of choice.
+* Script your service using CloudFormation, and your server configuration management tool of choice should you need one.
 * Provision the service in your AWS account.
-* Write a healthcheck script that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
+* Write a healthcheck script in Python that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
 * Alter the README to contain instructions required to:
   * Provision the service.
   * Run the healthcheck script.
@@ -36,13 +36,12 @@ We know time is precious, we won't mark you down for not doing the extra credits
 
 * Run the service inside a Docker container.
 * Make it highly available.
-* We value CloudFormation and rely on it heavily. If you already know CF, we’d love to see you use it.
 
 # Questions
 
 #### What scripting languages can I use?
 
-Anyone you like. You’ll have to justify your decision. We use CloudFormation, Puppet and Python internally. Please pick something you're familiar with, as you'll need to be able to discuss it.
+Please use Python and CloudFormation, as we would like to see your skills with these tools. For configuration management we use Puppet internally, but feel free to use anything you're familiar with. You'll need to be able to justify and discuss your choices.
 
 #### Will I have to pay for the AWS charges?
 
