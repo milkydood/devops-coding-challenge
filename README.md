@@ -1,14 +1,6 @@
 DevOps Coding Test
 ==================
 
-# Goal
-
-Script the creation of a service, and a healthcheck script to verify it is up and responding correctly.
-
-# Prerequisites
-
-You will need an AWS account. Create one if you don't own one already. You can use free-tier resources for this test.
-
 # The Task
 
 You are required to provision and deploy a new service in AWS. It must:
@@ -37,28 +29,32 @@ We know time is precious, we won't mark you down for not doing the extra credits
 * Run the service inside a Docker container.
 * Make it highly available.
 
-# Questions
+# The Submitted solution
 
-#### What scripting languages can I use?
+#### Spinning up the service
 
-Please use Python and CloudFormation, as we would like to see your skills with these tools. For configuration management we use Puppet internally, but feel free to use anything you're familiar with. You'll need to be able to justify and discuss your choices.
+After configuring credentials via `aws configure` or exporting them as environment variables, start the service:
 
-#### Will I have to pay for the AWS charges?
+```aws cloudformation create-stack --stack-name webtoo --template-body file://web.yaml --parameters file://webparam.json```
 
-No. You are expected to use free-tier resources only and not generate any charges. Please remember to delete your resources once the review process is over so you are not charged by AWS.
+This will create a new cloudformation stack, with an AWS Linux t2.nano instance running the service.
 
-#### What will you be grading me on?
+You can either use this service by hitting the instance's public IP, or by hitting the ELB end-point.
 
-Scripting skills, security, elegance, understanding of the technologies you use, documentation.
+#### TODO/Improvements
 
-#### What will you not take into account?
+This can be considered a WIP. In particular, I haven't quite met this requirement:
+* Write a healthcheck script in Python that can be run externally to periodically check if the service is up and its clock is not desynchronised by more than 1 second.
+- In fact, I've made this healtcheck an integral part of the service, and it's being used to determine if the service is healthy. While this may be a posotive thing, it isn't what was required
 
-Brevity. We know there are very simple ways of solving this exercise, but we need to see your skills. We will not be able to evaluate you if you provide five lines of code.
+* Turn off public :80 on the instances
+  - have these served via the LB only
 
-#### Will I have a chance to explain my choices?
+* Finish the dns part of the service
+  - I've delegated part of my personal domain, test.milky.org.uk, which is a hosted AWS zone. Finish writing the ELB DNS name as a Alias in route53 via cloudformation
 
-If we proceed to a phone interview, we’ll be asking questions about why you made the choices you made. Comments in the code are also very helpful.
+* Improve the python
+  - It's deliberately. Seemed like a good idea at the time, to ensure it blocked checking ntp drift, but this is actually not ideal at all. It does seem like a good idea to have the healtcheck and actual service as one running process, but it should not block.
 
-#### Why doesn't the test include X?
-
-Good question. Feel free to tell us how to make the test better. Or, you know, fork it and improve it!
+* Docker, or maybe lambda the service
+  - No need for this to run on instances to manage, so fargate or lambda would be suitable candidates (bearing in mind the cost of high request lambda hits)

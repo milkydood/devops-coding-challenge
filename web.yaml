@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Test
+Parameters: 
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.nano
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+    ConstraintDescription: must be a valid EC2 instance type
+Resources:
+  SharedSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow 80 inbound only
+      SecurityGroupIngress:
+        IpProtocol: tcp 
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+  InstanceLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: true
+      ImageId: ami-0089b31e09ac3fffc
+      KeyName: tempkeypair
+      InstanceType: !Ref InstanceType
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -ex
+            yum install -y python3
+            pip3 install ntplib
+            echo aW1wb3J0IG50cGxpYgppbXBvcnQgc2lnbmFsCmZyb20gdGltZSBpbXBvcnQgZ210aW1lLHN0cmZ0aW1lCmZyb20gaHR0cC5zZXJ2ZXIgaW1wb3J0IEhUVFBTZXJ2ZXIsIEJhc2VIVFRQUmVxdWVzdEhhbmRsZXIKClBPUlQgPSA4MApOVFBfUE9PTCA9ICd1ay5wb29sLm50cC5vcmcnCgpjbGFzcyBIVFRQSGFuZGxlckNsYXNzKEJhc2VIVFRQUmVxdWVzdEhhbmRsZXIpOgogICAgc3lzX3ZlcnNpb249c2VydmVyX3ZlcnNpb249JycKCiAgICBkZWYgX3NldF9oZWFkZXJzKHNlbGYsIGNvZGUpOgogICAgICAgIHNlbGYuc2VuZF9yZXNwb25zZShjb2RlKQogICAgICAgIHNlbGYuc2VuZF9oZWFkZXIoIkNvbnRlbnQtdHlwZSIsICJ0ZXh0L2h0bWwiKQogICAgICAgIHNlbGYuZW5kX2hlYWRlcnMoKQoKICAgIGRlZiBfdGV4dChzZWxmLCBvdXRwdXQpOgogICAgICAgIHJldHVybiBvdXRwdXQuZW5jb2RlKCJVVEYtOCIpCgogICAgZGVmIGRvX0dFVChzZWxmKToKICAgICAgICBpZiAoc2VsZi5wYXRoID09ICcvd2ViJyk6CiAgICAgICAgICAgIHNlbGYuX3NldF9oZWFkZXJzKDIwMCkKICAgICAgICAgICAgc2VsZi53ZmlsZS53cml0ZShzZWxmLl90ZXh0KHN0cmZ0aW1lKCIlYSwgJWQgJWIgJVkgJUg6JU06JVMgKzAwMDAiLCBnbXRpbWUoKSkpKQogICAgICAgICAgICByZXR1cm4KICAgICAgICBjID0gbnRwbGliLk5UUENsaWVudCgpCiAgICAgICAgIyBQcm92aWRlIHRoZSByZXNwZWN0aXZlIG50cCBzZXJ2ZXIgaXAgaW4gYmVsb3cgZnVuY3Rpb24KICAgICAgICB0cnk6CiAgICAgICAgICAgIHJlc3BvbnNlID0gYy5yZXF1ZXN0KE5UUF9QT09MLCB2ZXJzaW9uPTMpCiAgICAgICAgZXhjZXB0IG50cGxpYi5OVFBFeGNlcHRpb246CiAgICAgICAgICAgIHNlbGYuX3NldF9oZWFkZXJzKDUwMCkKICAgICAgICAgICAgc2VsZi53ZmlsZS53cml0ZShzZWxmLl90ZXh0KCJUaW1lb3V0IGNvbm5lY3RpbmcgdG8gcmVtb3RlIG50cCBzZXJ2ZXIiKSkKICAgICAgICAgICAgcmV0dXJuCgogICAgICAgIGlmIGFicyhyZXNwb25zZS5vZmZzZXQpIDwgMToKICAgICAgICAgICAgc2VsZi5fc2V0X2hlYWRlcnMoMjAwKQogICAgICAgICAgICBzZWxmLndmaWxlLndyaXRlKHNlbGYuX3RleHQoImZpbmUgIiArIHN0cihyZXNwb25zZS5vZmZzZXQpKSkKICAgICAgICBlbHNlOgogICAgICAgICAgICBzZWxmLl9zZXRfaGVhZGVycyg1MDApCiAgICAgICAgICAgIHNlbGYud2ZpbGUud3JpdGUoc2VsZi5fdGV4dCgibm90IGZpbmUgIiArIHN0cihyZXNwb25zZS5vZmZzZXQpKSkKCiAgICBkZWYgZG9fSEVBRChzZWxmKToKICAgICAgICBzZWxmLl9zZXRfaGVhZGVycygpCgogICAgZGVmIGRvX1BPU1Qoc2VsZik6CiAgICAgICAgc2VsZi5fc2V0X2hlYWRlcnMoNTAwKQogICAgICAgICMgRG9lc24ndCBkbyBhbnl0aGluZyB3aXRoIHBvc3RlZCBkYXRhCiAgICAgICAgc2VsZi5fc2V0X2hlYWRlcnMoKQoKCgpzZXJ2ZXJfYWRkcmVzcyA9ICgnJywgUE9SVCkKaHR0cGQgPSBIVFRQU2VydmVyKHNlcnZlcl9hZGRyZXNzLCBIVFRQSGFuZGxlckNsYXNzKQpodHRwZC5zZXJ2ZV9mb3JldmVyKCkK | base64 -d >/root/service.py
+            python3 /root/service.py
+      SecurityGroups:
+        - !GetAtt SharedSecurityGroup.GroupId
+  InstanceScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties: 
+      AvailabilityZones:
+        Fn::GetAZs: !Ref AWS::Region
+      LaunchConfigurationName: !Ref InstanceLaunchConfig
+      LoadBalancerNames:
+        - !Ref InstanceLoadBalancer
+      MaxSize: 1
+      MinSize: 1
+      DesiredCapacity: 1
+  InstanceLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      CrossZone: true
+      HealthCheck:
+        HealthyThreshold: 2
+        UnhealthyThreshold: 3
+        Interval: 300 
+        Target: HTTP:80/
+        Timeout: 10
+      Listeners:
+        - LoadBalancerPort: 80
+          InstancePort: 80
+          Protocol: HTTP
+      Subnets:
+        - subnet-aa5584e6
+        - subnet-dd6224b4
+        - subnet-568e0c2c
+      SecurityGroups:
+        - !GetAtt SharedSecurityGroup.GroupId
+
+Outputs:
+  InstanceScalingGroupName: 
+    Value: !Ref InstanceScalingGroup
+    Export:
+      Name: InstanceASG-NAme
