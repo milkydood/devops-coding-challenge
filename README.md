@@ -58,3 +58,6 @@ This can be considered a WIP. In particular, I haven't quite met this requiremen
 
 * Docker, or maybe lambda the service
   - No need for this to run on instances to manage, so fargate or lambda would be suitable candidates (bearing in mind the cost of high request lambda hits)
+
+* Use more paremeters / cfn stacks
+  - There's hardcoded values (ie subnets come to mind) in the cloudformation. This shouldn't be the case.
