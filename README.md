@@ -61,3 +61,6 @@ This can be considered a WIP. In particular, I haven't quite met this requiremen
 
 * Use more paremeters / cfn stacks
   - There's hardcoded values (ie subnets come to mind) in the cloudformation. This shouldn't be the case.
+
+* Maybe don't ask people to fork this repo?
+  - You can follow forks to see others solutions. Would it not be better to duplicate it, restrict it, then invite the reviewers as contributors?
